@@ -7,12 +7,13 @@ use AppBundle\Entity\User;
 //use Doctrine\Bundle\FixturesBundle\Fixture;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture //AbstractFixture implements OrderedFixtureInterface
+class AppFixtures implements Fixture //AbstractFixture implements OrderedFixtureInterface
 {
     private $encoder;
 
