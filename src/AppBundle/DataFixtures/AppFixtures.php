@@ -34,9 +34,6 @@ class AppFixtures implements Fixture //AbstractFixture implements OrderedFixture
 
         $manager->flush();
     }
-     public function getOrder()
-    {
-        return 1;
-    }
+
   
 }
