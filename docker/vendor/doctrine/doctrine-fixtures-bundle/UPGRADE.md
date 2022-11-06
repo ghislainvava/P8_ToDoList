@@ -2,7 +2,7 @@ UPGRADE to 3.0
 ==============
 
 * The automatic loading of fixtures in a directory (e.g.
-    AppBundle\DataFixtures\ORM) was removed. Instead, register
+    DataFixtures\ORM) was removed. Instead, register
     your fixture classes as services and tag them with `doctrine.fixture.orm`,
     like this:
 ```yaml
@@ -12,7 +12,7 @@ services:
     tags: ['doctrine.fixture.orm']
     autowire: true # if you need dependency injection, see next bullet point
 
-  AppBundle\DataFixtures\ORM\:
+  DataFixtures\ORM\:
     resource: '../../DataFixtures/ORM/*'
 ```
 
