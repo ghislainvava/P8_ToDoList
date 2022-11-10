@@ -11,13 +11,17 @@ class TaskControllerTest extends WebTestCase
 
     public function testIndexList()
     {
-        $this->client = static::createClient(); //simule le navigateur
+
+        $this->client = static::createClient([], [
+          'PHP_AUTH_USER' => 'titi',
+          'PHP_AUTH_PW'   => 'password',
+          ]);
 
         $crawler = $this->client->request('GET', '/tasks');
 
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('/login', $this->client->getResponse()->getTargetUrl());
-        //$this->assertContains("je fais un task0", $client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+       //$this->assertContains('/login', $this->client->getResponse()->getTargetUrl());
+        $this->assertContains("je fais un task0", $this->client->getResponse()->getContent());
     }
     
 

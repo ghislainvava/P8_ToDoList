@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    public function testIndexNonConnecte()
     {
         $client = static::createClient();
 
@@ -17,4 +17,6 @@ class DefaultControllerTest extends WebTestCase
         $this->assertContains('/login', $client->getResponse()->getTargetUrl());
         //$this->assertContains('Se connecter', $client->getResponse()->getContent());
     }
+
+    //faire une function avec connection
 }
