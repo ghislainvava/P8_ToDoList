@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
@@ -24,5 +24,41 @@ class UserType extends AbstractType
             ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
         ;
+    }
+    // public function buildForm(FormBuilderInterface $builder, array $options): void
+    // {
+    //     $builder
+    //         ->add('email', EmailType::class, [
+    //             'attr' => [
+    //                 'class' => 'form-control'
+    //             ],
+    //            'label' =>  'E-mail'
+    //         ])
+    //         ->add('username', TextType::class, [
+    //             'attr' => [
+    //                 'class' => 'form-control'
+    //                 ],
+    //              'label' => 'Nom'
+    //         ])
+    //         ->add('password', PasswordType::class, [
+    //             'attr' => [
+    //                 'class' => 'form-control'
+    //                 ],
+    //               'label' =>  'Mot de passe'
+    //         ])
+    //         ->add('confirm_password', PasswordType::class, [
+    //             'attr' => [
+    //                 'class' => 'form-control'
+    //                 ],
+    //                'label' =>  'Mot de passe'
+    //         ])
+    //     ;
+    // }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+        ]);
     }
 }

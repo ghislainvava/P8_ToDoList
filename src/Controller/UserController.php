@@ -7,6 +7,8 @@ use App\Form\UserType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\RegistrationType;
 
 class UserController extends AbstractController
 {
@@ -18,15 +20,15 @@ class UserController extends AbstractController
 
     
     #[Route('/users/create', name: 'user_create')]
-    public function createAction(Request $request)
+    public function createAction(Request $request, EntiTyManagerInterface $em)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-
+        //$form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user=$form->getdata;
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
