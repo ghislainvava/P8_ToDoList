@@ -43,3 +43,4 @@ class TaskRepository extends ServiceEntityRepository
     {
         return $this->findBy([],['created_at' => 'DESC']);
     }
+}
