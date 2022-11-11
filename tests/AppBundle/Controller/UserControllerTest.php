@@ -21,10 +21,13 @@ class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/users/create');
+        $crawler = $client->request('POST', '/users/create');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains("Mot de passe", $client->getResponse()->getContent());
+        $this->assertContains("Créer un utilisateur", $client->getResponse()->getContent());
+
+        //créer un test post avec reponse un utilsateur a ete creer 
+
     }
 
     public function testIndexUsersIdEdit()

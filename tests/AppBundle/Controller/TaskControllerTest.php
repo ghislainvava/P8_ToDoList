@@ -9,7 +9,7 @@ class TaskControllerTest extends WebTestCase
 {
     private $client = null;
 
-    public function testIndexList()
+    public function testIndexListConnnecte()
     {
 
         $this->client = static::createClient([], [
@@ -20,31 +20,63 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/tasks');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-       //$this->assertContains('/login', $this->client->getResponse()->getTargetUrl());
         $this->assertContains("je fais un task0", $this->client->getResponse()->getContent());
     }
-    
+    public function testIndexListNonConnecte()
+    {
+        $this->client = static::createClient(); //simule le navigateur
 
-      public function testIndexTaskCreate()
+        $crawler = $this->client->request('GET', '/tasks');
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('/login', $this->client->getResponse()->getTargetUrl());
+    
+    }
+      public function testTaskCreateNonConnecte()
     {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/tasks/create');
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        //$this->assertContains("Ajouter", $client->getResponse()->getContent());
         $this->assertContains('/login', $client->getResponse()->getTargetUrl());
     }
 
-    public function testIndexTaskIdEdit()
+   
+      public function testTaskCreateConnecte()
+    {
+        $this->client = static::createClient([], [
+          'PHP_AUTH_USER' => 'titi',
+          'PHP_AUTH_PW'   => 'password',
+          ]);
+
+        $crawler = $this->client->request('GET', '/tasks/create');
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertContains("Créer un utilisateur", $this->client->getResponse()->getContent());
+       
+    }
+
+    public function testTaskIdEditConnecte()
+    {
+        $client = static::createClient([], [
+          'PHP_AUTH_USER' => 'titi',
+          'PHP_AUTH_PW'   => 'password',
+          ]);
+
+
+        $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
+
+         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+         $this->assertContains("je fais un task8", $client->getResponse()->getContent());
+    }
+     public function testTaskIdEditNonConnecte()
     {
         $client = static::createClient();
 
-        $crawler = $client->request('PUT', '/tasks/3/edit'); //verifier utilisateur existant
+        $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
         $this->assertContains('/login', $client->getResponse()->getTargetUrl());
-
          $this->assertEquals(302, $client->getResponse()->getStatusCode());
-         //$this->assertContains("Modifier", $client->getResponse()->getContent());
     }
 
       public function testDeleteIdEdit()
@@ -55,4 +87,17 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
+
+
+    //   public function testDeleteIdEdit()
+    // {
+    //     $client = static::createClient([], [
+    //       'PHP_AUTH_USER' => 'titi',
+    //       'PHP_AUTH_PW'   => 'password',
+    //       ]);
+
+    //     $crawler = $client->request('DELETE', '/tasks/11/delete'); //verifier utilisateur existant
+
+    //     $this->assertEquals(302, $client->getResponse()->getStatusCode());
+    // }
 }

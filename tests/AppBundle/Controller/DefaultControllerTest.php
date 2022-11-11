@@ -15,7 +15,19 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertContains('/login', $client->getResponse()->getTargetUrl());
-        //$this->assertContains('Se connecter', $client->getResponse()->getContent());
+    }
+
+    public function testIndexConnecte()
+    {
+        $client = static::createClient([], [
+          'PHP_AUTH_USER' => 'titi',
+          'PHP_AUTH_PW'   => 'password',
+          ]);
+
+        $crawler = $client->request('GET', '/');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertContains('Bienvenue sur Todo', $client->getResponse()->getContent());
     }
 
     //faire une function avec connection
