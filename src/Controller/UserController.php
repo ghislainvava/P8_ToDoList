@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Form\RegistrationType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,9 +20,11 @@ class UserController extends AbstractController
     }
 
     #[Route("/users", name:"user_list")]
-    public function listAction()
+    public function listAction(EntiTyManagerInterface $em, UserRepository $userRepo)
     {
-        return $this->render('user/list.html.twig', ['users' => $this->entityManager->getRepository(User::class)->findAll()]);
+        $users = $userRepo->findAll();
+        
+        return $this->render('user/list.html.twig', ['users' => $users]);
     }
 
     
@@ -34,10 +37,10 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user=$form->getdata;
+            $user=$form->getData();
             $password = $encoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
-
+            $user->setRoles(["ROLE_USER"]);
             $em->persist($user);
             $em->flush();
 
