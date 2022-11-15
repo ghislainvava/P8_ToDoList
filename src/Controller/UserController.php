@@ -13,6 +13,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
+    public function __construct(UserPasswordHasherInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
 
     #[Route("/users", name:"user_list")]
     public function listAction()
@@ -46,14 +50,14 @@ class UserController extends AbstractController
     }
 
     #[Route("/users/{id}/edit", name:"user_edit")]
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $encoder, EntiTyManagerInterface $em)
+    public function editAction(User $user, Request $request, EntiTyManagerInterface $em)
     {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->hashPassword($user, $user->getPassword());
+            $password = $this->encoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $em->persist($user);

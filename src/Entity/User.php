@@ -9,43 +9,38 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 
-/**
- * @ORM\Table("user")
- * @ORM\Entity
- * @UniqueEntity("email")
- */
-
-class User implements UserInterface
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity("email", message: "Cet email est déjà utilisé")]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message:"Vous devez saisir un nom d'utilisateur.")]
     private $username;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    //private $password;
-    private ?string $password = null;
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
-     * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(min:8, minMessage: "Votre mot de passe doit posséder au moins 8 caractères")]
+    //#[Assert\EqualTo(propertyPath: "confirm_password", message:"Vous n'avez donné le même mot de passe ")]
+    private $password;
+   
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\Email()]
+    #[Assert\Length(min:2, max: 180)]
+    #[Assert\Email(message:"Vous devez saisir un nom email valide.")]
     private $email;
+
+    #[ORM\Column]
+    private array $roles = [];
 
     public function getId()
     {
         return $this->id;
     }
+
 
     public function getUsername()
     {
@@ -62,14 +57,16 @@ class User implements UserInterface
         return null;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword(string $password):self 
     {
         $this->password = $password;
+
+        return $this;
     }
 
     public function getEmail()
@@ -82,11 +79,18 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-   
+   public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+    
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);

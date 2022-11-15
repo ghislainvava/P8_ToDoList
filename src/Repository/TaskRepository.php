@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use Doctrine\ORM\Query;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,8 +40,8 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAll()
-    {
-        return $this->findBy([],['created_at' => 'DESC']);
-    }
+    // public function findAll()
+    // {
+    //     return $this->findBy([],['created_at' => 'DESC']);
+    // }
 }

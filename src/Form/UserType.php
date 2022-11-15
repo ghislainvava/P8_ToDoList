@@ -3,14 +3,15 @@
 namespace App\Form;
 
 
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
@@ -26,6 +27,17 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
             ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
+            ->add('roles', ChoiceType::class,
+                [
+                    'choices' => [
+                    'user' => 'ROLE_USER',
+                    'admin' => 'ROLE_ADMIN',
+                    ],
+                    'multiple' => true,
+                    'expanded' => true,
+                ]
+            )
+        ;
         ;
     }
     // public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -49,12 +61,12 @@ class UserType extends AbstractType
     //                 ],
     //               'label' =>  'Mot de passe'
     //         ])
-    //         ->add('confirm_password', PasswordType::class, [
-    //             'attr' => [
-    //                 'class' => 'form-control'
-    //                 ],
-    //                'label' =>  'Mot de passe'
-    //         ])
+    //         // ->add('confirm_password', PasswordType::class, [
+    //         //     'attr' => [
+    //         //         'class' => 'form-control'
+    //         //         ],
+    //         //        'label' =>  'Mot de passe'
+    //         // ])
     //     ;
     // }
 
