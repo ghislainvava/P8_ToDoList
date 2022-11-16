@@ -13,10 +13,11 @@ class DefaultControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/');
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        //$this->assertResponseRedirects('/login');
+        
     //     $this->assertEquals(302, $client->getResponse()->getStatusCode());
-    //     $this->assertContains('/login', $client->getResponse()->getTargetUrl());
+       // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
    }
 
     public function testIndexConnecte()
@@ -27,7 +28,7 @@ class DefaultControllerTest extends WebTestCase
           ]);
 
         $client->request('GET', '/');
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
 
         // $this->assertEquals(200, $client->getResponse()->getStatusCode());
         // $this->assertContains('Bienvenue sur Todo', $client->getResponse()->getContent());

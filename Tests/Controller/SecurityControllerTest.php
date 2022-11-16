@@ -15,9 +15,11 @@ class SecurityControllerTest extends WebTestCase
         $client->request('GET', '/login');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+
         // static::assertEquals(200, $client->getResponse()->getStatusCode());
         // static::assertContains("Se connecter", $client->getResponse()->getContent());
     }
 
-    //faire une function avec connection
+    
 }

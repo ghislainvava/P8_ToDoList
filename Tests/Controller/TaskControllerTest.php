@@ -23,15 +23,17 @@ class TaskControllerTest extends WebTestCase
         // $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         // $this->assertContains("je fais un task0", $this->client->getResponse()->getContent());
     }
+
     public function testIndexListNonConnecte()
     {
         $this->client = static::createClient(); //simule le navigateur
 
         $crawler = $this->client->request('GET', '/tasks');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        //$this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        // $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         // $this->assertContains('/login', $this->client->getResponse()->getTargetUrl());
     
     }
@@ -41,7 +43,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/tasks/create');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         // $this->assertEquals(302, $client->getResponse()->getStatusCode());
         // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
     }
@@ -56,7 +58,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/tasks/create');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         // $this->assertContains("Créer un utilisateur", $this->client->getResponse()->getContent());
@@ -72,17 +74,18 @@ class TaskControllerTest extends WebTestCase
 
 
         $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
-          $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
 
         //  $this->assertEquals(200, $client->getResponse()->getStatusCode());
         //  $this->assertContains("je fais un task8", $client->getResponse()->getContent());
     }
+
      public function testTaskIdEditNonConnecte()
     {
         $client = static::createClient();
 
         $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
         //  $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
@@ -93,7 +96,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('PUT', '/tasks/3/delete'); //verifier utilisateur existant
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSame(404, $client->getResponse()->getStatusCode());
         // $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
   }
