@@ -2,19 +2,22 @@
 
 namespace Tests\Controller;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SecurityControllerTest extends WebTestCase
 {
-     public function testLogin()
+    public function testLogin()
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/login');
+        $client->request('GET', '/login');
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertContains("Se connecter", $client->getResponse()->getContent());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        // static::assertEquals(200, $client->getResponse()->getStatusCode());
+        // static::assertContains("Se connecter", $client->getResponse()->getContent());
     }
-    
+
+    //faire une function avec connection
 }
