@@ -11,17 +11,19 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
   
-    #[Route('/login', name:"login", methods: ['GET', 'POST'])] 
+    #[Route('/login', name:"login")] 
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastusername();
         if ($this->getUser()) {
-            return $this->redirectToRoute(route: 'home');
+            return $this->redirectToRoute(route: 'homepage');
         }
+        
         return $this->render('security/login.html.twig', [
             'last_username'=> $lastUsername,
             'error'        => $error,
+            
         ]);
     }
     
@@ -31,6 +33,7 @@ class SecurityController extends AbstractController
     {
         // This code is never executed.
     }
+
 
     #[Route("/logout", name:"logout")]
     public function logoutCheck()

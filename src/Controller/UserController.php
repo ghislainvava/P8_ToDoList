@@ -19,8 +19,8 @@ class UserController extends AbstractController
         $this->encoder = $encoder;
     }
 
-    #[Route("/users", name:"user_list")]
-    public function listAction(EntiTyManagerInterface $em, UserRepository $userRepo)
+    #[Route("/users", name:"user_list", methods:['GET'])]
+    public function listAction( UserRepository $userRepo)
     {
         $users = $userRepo->findAll();
         
@@ -52,7 +52,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id}/edit", name:"user_edit")]
+    #[Route("/users/{id}/edit", name:"user_edit", methods:['GET'])]
     public function editAction(User $user, Request $request, EntiTyManagerInterface $em)
     {
         $form = $this->createForm(UserType::class, $user);
