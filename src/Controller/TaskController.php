@@ -19,7 +19,7 @@ class TaskController extends AbstractController
         return $this->render('task/list.html.twig', ['tasks' => $em->getRepository(Task::class)->findAll()]);
     }
 
-    #[Route("/tasks/create", name:"task_create", methods: ['POST'])]
+    #[Route("/tasks/create", name:"task_create")]
     public function createAction(Request $request, EntiTyManagerInterface $em)
     {
         $task = new Task();
@@ -29,7 +29,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //$em = $this->getDoctrine()->getManager();
-
+            $task->setUser($this->getUser());
             $em->persist($task);
             $em->flush();
 
@@ -41,7 +41,7 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/tasks/{id}/edit", name:"task_edit", methods: ['PUT'])]
+    #[Route("/tasks/{id}/edit", name:"task_edit")]
     public function editAction(Task $task, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(TaskType::class, $task);
@@ -64,7 +64,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route("/tasks/{id}/toggle", name:"task_toggle", methods: ['PUT'])]
+    #[Route("/tasks/{id}/toggle", name:"task_toggle")]
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)
     {
 
@@ -81,7 +81,7 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('homepage');
     }
 
-    #[Route("/tasks/{id}/delete", name:"task_delete", methods: ['DELETE'])]
+    #[Route("/tasks/{id}/delete", name:"task_delete")]
     public function deleteTaskAction(Task $task, TaskRepository $repoTask, Request $request, EntityManagerInterface $em)
     {
     
