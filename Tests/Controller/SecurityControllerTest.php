@@ -15,9 +15,11 @@ class SecurityControllerTest extends WebTestCase
 
         $client->request('GET', '/login');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+       // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+         $this->assertEquals(200, $client->getResponse()->getStatusCode());
      
        $this->assertSelectorTextContains('label', "Nom d'utilisateur :");
+       $this->assertSelectorNotExists('.alert.alert-danger');
     }
 
     public function testLoginConnecte()
@@ -32,9 +34,12 @@ class SecurityControllerTest extends WebTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         //$this->assertResponseRedirects('http://localhost/');
         static::assertResponseRedirects('/');
+        //  $client->followRedirect();
+        // $this-> assertSelectorNotExists('.alert.alert-danger');
         
 
     }
+    
 
     
 }
