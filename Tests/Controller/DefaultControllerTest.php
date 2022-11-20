@@ -14,11 +14,11 @@ class DefaultControllerTest extends WebTestCase
      public function testIndexNonConnecte()
     {
         $client = static::createClient();
-
-        $client->request('GET', '/');
+        
+        $scrawler = $client->request('GET', '/');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertResponseRedirects('http://localhost/login');
-        
+        //$this->assertSelectorTextContains('h1', 'Bienvenue sur Todo');
     //     $this->assertEquals(302, $client->getResponse()->getStatusCode());
        // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
    }
@@ -33,10 +33,8 @@ class DefaultControllerTest extends WebTestCase
 
         $client->request('GET', '/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        //$this->assertResponseRedirects('http://localhost');
-
-        // $this->assertEquals(200, $client->getResponse()->getStatusCode());
-         $this->assertStringContainsString('Bienvenue sur Todo', $client->getResponse()->getContent());
+         //$this->assertStringContainsString('Bienvenue sur Todo', $client->getResponse()->getContent());
+         $this->assertSelectorTextContains('h1', 'Bienvenue sur Todo');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Controller;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -9,19 +10,20 @@ class TaskControllerTest extends WebTestCase
 {
     private $client = null;
 
-    public function testIndexListConnnecte()
+    public function testIndexListConnecte()
     {
 
-        $this->client = static::createClient([], [
-          'PHP_AUTH_USER' => 'titi',
-          'PHP_AUTH_PW'   => 'password',
-          ]);
+        $client = static::createClient();
+        
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(7);
+        $client->loginUser($user);
 
-         $this->client->request('GET', '/tasks');
+        $client->request('GET', '/tasks');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
-        // $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        // $this->assertContains("je fais un task0", $this->client->getResponse()->getContent());
+       // $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('div', "To Do List app");
     }
 
     public function testIndexListNonConnecte()
@@ -29,7 +31,10 @@ class TaskControllerTest extends WebTestCase
         $this->client = static::createClient(); //simule le navigateur
 
         $crawler = $this->client->request('GET', '/tasks');
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        static::assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('http://localhost/login');
+        //$this->assertSelectorTextContains('h1', 'Bienvenue sur Todo');
 
         //$this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
@@ -43,22 +48,24 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('POST', '/tasks/create');
 
-        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
+        $this->assertSame(302, $client->getResponse()->getStatusCode());
+        $this->assertResponseRedirects('http://localhost/login');
+       
     }
 
    
       public function testTaskCreateConnecte()
     {
-        $this->client = static::createClient([], [
-          'PHP_AUTH_USER' => 'titi',
-          'PHP_AUTH_PW'   => 'password',
-          ]);
+       $client = static::createClient();
+        
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(7);
+        $client->loginUser($user);
 
-        $crawler = $this->client->request('POST', '/tasks/create');
+        $crawler = $client->request('POST', '/tasks/create');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        //$this->assertSelectorTextContains('button', "Supprimer");
 
         // $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         // $this->assertContains("Créer un utilisateur", $this->client->getResponse()->getContent());
@@ -67,11 +74,11 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskIdEditConnecte()
     {
-        $client = static::createClient([], [
-          'PHP_AUTH_USER' => 'titi',
-          'PHP_AUTH_PW'   => 'password',
-          ]);
-
+        $client = static::createClient();
+        
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(7);
+        $client->loginUser($user);
 
         $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
         $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
@@ -85,14 +92,18 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
 
         $crawler = $client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
-        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertSame(302, $client->getResponse()->getStatusCode());
         // $this->assertContains('/login', $client->getResponse()->getTargetUrl());
         //  $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 
       public function testDeleteIdEdit()
     {
-         $client = static::createClient();
+        $client = static::createClient();
+        
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(7);
+        $client->loginUser($user);
 
         $crawler = $client->request('DELETE', '/tasks/3/delete'); //verifier utilisateur existant
 

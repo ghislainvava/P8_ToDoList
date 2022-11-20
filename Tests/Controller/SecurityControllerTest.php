@@ -2,6 +2,7 @@
 
 namespace Tests\Controller;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -15,10 +16,24 @@ class SecurityControllerTest extends WebTestCase
         $client->request('GET', '/login');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+     
+       $this->assertSelectorTextContains('label', "Nom d'utilisateur :");
+    }
 
+    public function testLoginConnecte()
+    {
+        $client = static::createClient();
 
-        // static::assertEquals(200, $client->getResponse()->getStatusCode());
-        // static::assertContains("Se connecter", $client->getResponse()->getContent());
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(7);
+        $client->loginUser($user);
+
+        $client->request('GET', '/login');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        //$this->assertResponseRedirects('http://localhost/');
+        static::assertResponseRedirects('/');
+        
+
     }
 
     
