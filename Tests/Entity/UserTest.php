@@ -27,6 +27,7 @@ class UserTest extends TestCase
         $this->assertNotSame($userpassword, $this->user->getPassword());
         $this->user->setPassword($userpassword);
         $this->assertSame($userpassword, $this->user->getPassword());
+        $this->assertSame('password', $this->user->getPassword());
     }
 
     public function testUserEmail(): void
@@ -50,6 +51,8 @@ class UserTest extends TestCase
     //  public function testAuthor(): void
     // {
     //     $task = new task();
+
+    
 
     //     $author = new user();
 

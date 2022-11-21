@@ -27,7 +27,7 @@ class UserRepositoryTest extends KernelTestCase
             ->getManager();
     }
 
-    public function testUserUpgradePassword()
+    public function testUserRepositoryFindOneBy()
     {
         /** @var UserRepository $repository */
         $repository = $this->entityManager
@@ -35,13 +35,18 @@ class UserRepositoryTest extends KernelTestCase
 
         $user = $repository->findOneBy(['username' => 'paul']);
 
-        //$repository->add($user, 'password');
-
-        $user = $this->entityManager
-            ->getRepository(User::class)
-            ->findOneBy(['username' => 'paul']);
-
         $this->assertSame('paul', $user->getUsername());
+    }
+
+        public function testUserRepositoryFindAll()
+    {
+        /** @var UserRepository $repository */
+        $repository = $this->entityManager
+            ->getRepository(User::class);
+
+        $user = $repository->findAll();
+        dump($user[0]);
+        $this->assertCount(14, ['user']);
     }
 
     // public function testUserUpgradePasswordException()

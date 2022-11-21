@@ -71,18 +71,25 @@ class UserControllerTest extends WebTestCase
         'user[roles]'            => ['ROLE_USER']
        
     ]);
-       
+    //    $form = $crawler->selectButton('Ajouter')->form();
+    //     $form['user[username]'] = 'ghis';
+    //     $form['user[password][first]'] = 'password';
+    //     $form['user[password][second]'] = 'password';
+    //     $form['user[email]'] = "ghis@free.fr";
+    //     $this->client->submit($form);
+
+        //$crawler = $this->client->followRedirect();
+
+        // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        // $this->assertSame("Superbe ! L'utilisateur a bien été ajouté.", $crawler->filter('div.alert.alert-success')->text());
         //$crawl= $this->client->followRedirect();
 
-
-      
         $this->assertSelectorTextContains('h2', 'Coucou');
         //$this->assertStringContainsString('Créer un utilisateur', $crawler->filter('.btn.btn-success.pull-right')->text());
-        // $this->assertResponseRedirects('/users');
-        //  $crawler = $this->client->followRedirect();
-       
+        // $this->assertResponseRedirects('/users');    
         //$this-> assertSelectorExists('.alert.alert-success');
     }
+ 
     public function testUserEditLoggedInAdmin(): void
     {
         $id =15;
