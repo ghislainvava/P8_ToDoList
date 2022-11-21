@@ -40,7 +40,7 @@ class UserController extends AbstractController
             $user=$form->getData();
             $password = $encoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
-            $user->setRoles(["ROLE_USER"]);
+            //$user->setRoles(["ROLE_USER"]);
             $em->persist($user);
             $em->flush();
 
@@ -52,7 +52,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id}/edit", name:"user_edit", methods:['GET'])]
+    #[Route("/users/{id}/edit", name:"user_edit")]
     public function editAction(User $user, Request $request, EntiTyManagerInterface $em)
     {
         $form = $this->createForm(UserType::class, $user);

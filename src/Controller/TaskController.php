@@ -84,13 +84,15 @@ class TaskController extends AbstractController
     #[Route("/tasks/{id}/delete", name:"task_delete")]
     public function deleteTaskAction(Task $task, TaskRepository $repoTask, Request $request, EntityManagerInterface $em)
     {
-    
-        $task = $repoTask->find($request->get('id'));
-        $em->remove($task);
-        $em->flush();
-
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-
+        
+        if ($this->getUser()->getId() == $task->getUser()->getId() || $this->isGranted('ROLE_ADMIN')) {
+            $em->remove($task);
+            $em->flush();
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            return $this->redirectToRoute('task_list');   
+        } 
+        
+        $this->addFlash('error', "Vous n'êtes pas autorisé à supprimer cette tâche car vous n'êtes pas l'auteur");
         return $this->redirectToRoute('task_list');
     }
 }

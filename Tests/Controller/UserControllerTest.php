@@ -2,48 +2,79 @@
 
 namespace Tests\Controller;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+
 class UserControllerTest extends WebTestCase
 {
-    public function testIndexList()
-    {
-         $client = static::createClient();
+    private KernelBrowser|null $client =null;
 
-        $crawler = $client->request('GET', '/users');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        //$this->assertSelectorTextContains('tr', "Nom d'utilisateur");
-
+    public function setUp():void{
+        $this->client = static::createClient(); //simule le navigateur
     }
 
-     public function testIndexUsersCreate()
+    public function testListNotLogged()
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('POST', '/users/create');
-
-        //$this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
-        $this->assertSame(302, $client->getResponse()->getStatusCode());
-        //$this->assertSelectorTextContains('h1', "Créer un utilisateur");
-
-        //créer un test post avec reponse un utilsateur a ete creer 
+        $this->client->request(Request::METHOD_GET, '/users');
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Se connecter', $crawler->filter('form .btn')->html());
 
     }
+     public function testListLoggedInAdmin(): void
+    {
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(15);
+        $this->client->loginUser($user);
 
-    // public function testIndexUsersIdEdit()
-    // {
-    //     $client = static::createClient();
+        $crawler = $this->client->request(Request::METHOD_GET, '/users');
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Liste des utilisateurs', $crawler->filter('h1')->html());
+    }
+     public function testUserCreateNotLogged()
+    {
+        $this->client->request(Request::METHOD_GET, '/users/create');
 
-    //     $crawler = $client->request('PUT', '/users/25/edit'); //verifier utilisateur existant
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Se connecter', $crawler->filter('form .btn')->html());
 
-    //     $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+     public function testUserCreateLoggedInAdmin(): void
+    {
 
-    // //     $this->assertEquals(200, $client->getResponse()->getStatusCode());
-    // //     $this->assertContains("Mot de passe", $client->getResponse()->getContent());
-    // }
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(15);
+        $this->client->loginUser($user);
+        
+        $crawler = $this->client->request(Request::METHOD_POST, '/users/create');
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+         //$this->assertStringContainsString('Ajouter', $crawler->filter('.btn.btn-success.pull-right')->text());
+        $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
+    }
+    public function testUserEditLoggedInAdmin(): void
+    {
+        $id =15;
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find($id);
+        $this->client->loginUser($user);
+        
+        $crawler = $this->client->request(Request::METHOD_POST, '/users/'.$id.'/edit');
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
+    }
+    
+
+
+   
 
 
 }
