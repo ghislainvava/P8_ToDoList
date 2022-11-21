@@ -5,14 +5,18 @@ namespace Tests\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+//use Symfony\Component\BrowserKit\Request ;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
+
 class UserControllerTest extends WebTestCase
 {
+    
+
     private KernelBrowser|null $client =null;
 
     public function setUp():void{
@@ -58,6 +62,26 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
          //$this->assertStringContainsString('Ajouter', $crawler->filter('.btn.btn-success.pull-right')->text());
         $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
+        
+        $this->client->submitForm('Ajouter', [
+        'user[username]'         => 'ghisl',
+        'user[password][first]'  => 'password',
+        'user[password][second]' => 'password',
+        'user[email]'            => 'ghisl@free.fr',
+        'user[roles]'            => ['ROLE_USER']
+       
+    ]);
+       
+        //$crawl= $this->client->followRedirect();
+
+
+      
+        $this->assertSelectorTextContains('h2', 'Coucou');
+        //$this->assertStringContainsString('Créer un utilisateur', $crawler->filter('.btn.btn-success.pull-right')->text());
+        // $this->assertResponseRedirects('/users');
+        //  $crawler = $this->client->followRedirect();
+       
+        //$this-> assertSelectorExists('.alert.alert-success');
     }
     public function testUserEditLoggedInAdmin(): void
     {
@@ -72,8 +96,7 @@ class UserControllerTest extends WebTestCase
         $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
     }
     
-
-
+    
    
 
 

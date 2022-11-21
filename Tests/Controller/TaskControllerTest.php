@@ -74,7 +74,10 @@ class TaskControllerTest extends WebTestCase
         $this->client->loginUser($testUser);
 
         $this->client->request('POST', '/tasks/create');
-        $this->assertSame(Response::HTTP_OK, $this->lient->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('add'));
+        // $form = $crawler->selectButton(('Ajouter'));
 
         $this->client->submitForm('Ajouter', [
             'task[title]' => 'title',
@@ -84,6 +87,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects('/tasks');
         $crawler = $this->client->followRedirect();
         $this->assertSelectorTextContains('div', "To Do List app");
+        $this-> assertSelectorExists('.alert.alert-success');
         
     }
 

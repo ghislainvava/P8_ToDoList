@@ -50,6 +50,7 @@ class DefaultControllerTest extends WebTestCase
         // $this->client->request('GET', '/');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
          $this->assertSelectorTextContains('h1', 'Bienvenue sur Todo');
+         
     }
 
 }

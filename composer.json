@@ -81,7 +81,9 @@
         "dama/doctrine-test-bundle": "^7.1",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "liip/test-fixtures-bundle": "^2.0.0",
-        "symfony/maker-bundle": "^1.46"
+        "symfony/maker-bundle": "^1.46",
+        "symfony/stopwatch": "6.1.*",
+        "symfony/web-profiler-bundle": "6.1.*"
     },
     "scripts": {
         "auto-scripts": {
