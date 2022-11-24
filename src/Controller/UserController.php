@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,14 +32,12 @@ class UserController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-        //$form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user=$form->getData();
             $password = $encoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
-            //$user->setRoles(["ROLE_USER"]);
             $em->persist($user);
             $em->flush();
 

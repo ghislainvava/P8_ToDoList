@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 
 /*
  * ************** CAUTION **************
@@ -419,4 +419,4 @@ $hasMinorProblems = (bool) count($minorProblems);
             <div class="version">Symfony Standard Edition</div>
         </div>
     </body>
-</html>
+</html> -->

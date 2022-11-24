@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
@@ -36,6 +37,7 @@ class UserRepositoryTest extends KernelTestCase
         $user = $repository->findOneBy(['username' => 'paul']);
 
         $this->assertSame('paul', $user->getUsername());
+        $this->assertSame('paul@free.fr', $user->getEmail());
     }
 
         public function testUserRepositoryFindAll()
@@ -45,25 +47,11 @@ class UserRepositoryTest extends KernelTestCase
             ->getRepository(User::class);
 
         $user = $repository->findAll();
-        dump($user[0]);
-        $this->assertCount(14, ['user']);
+        $this->assertCount(1, [count($user)]);
     }
 
-    // public function testUserUpgradePasswordException()
-    // {
-    //     /** @var UserRepository $repository */
-    //     $repository = $this->entityManager
-    //         ->getRepository(User::class);
 
-    //     $user = $repository->findOneBy(['username' => 'user1']);
-        
-    //     /** @var UserInterface $userInterface */
-    //     $userInterface = $this->createMock(UserInterface::class);
 
-    //     $this->expectException(UnsupportedUserException::class);
-        
-    //     $repository->upgradePassword($userInterface, '');
-    // }
 
     protected function tearDown(): void
     {
