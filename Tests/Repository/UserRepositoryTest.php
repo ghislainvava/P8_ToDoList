@@ -2,11 +2,13 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
+use App\services\EntityServices;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectRepository;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
@@ -49,7 +51,27 @@ class UserRepositoryTest extends KernelTestCase
         $user = $repository->findAll();
         $this->assertCount(1, [count($user)]);
     }
+    //   public function enManagertest()
+    // {
+        
+    //     $emang = $this->createMock(EntityManagerInterface::class);
+    //     dump($emang);
+    //     $task = new Task();
+    //     $user = $this->createMock(UserInterface::class);
 
+    //     $taskService = new EntityServices($emang);
+    //     $taskService->eManager($task, $user);
+
+    //     dump($task);
+    //     $this->assertEquals($user, $task->getUser());
+
+    //     // $em->expects($this->once())
+    //     //     ->method('persist')
+    //     //     ->with($task);
+
+    //     // $em->expects($this->once())
+    //     //     ->method('flush');
+    // }
 
 
 
@@ -61,4 +83,4 @@ class UserRepositoryTest extends KernelTestCase
         $this->entityManager->close();
         $this->entityManager = null;
     }
-}
+} 

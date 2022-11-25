@@ -50,48 +50,31 @@ class UserControllerTest extends WebTestCase
         $this->assertStringContainsString('Se connecter', $crawler->filter('form .btn')->html());
 
     }
-    //  public function testUserCreateLoggedInAdmin(): void
-    // {
+     public function testUserCreateLoggedInAdmin(): void
+    {
 
-    //     $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
-    //     $user= $userRepo->find(15);
-    //     $this->client->loginUser($user);
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(15);
+        $this->client->loginUser($user);
         
-    //     $crawler = $this->client->request(Request::METHOD_POST, '/users/create');
+        $crawler = $this->client->request(Request::METHOD_POST, '/users/create');
 
-    //     $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    //      //$this->assertStringContainsString('Ajouter', $crawler->filter('.btn.btn-success.pull-right')->text());
-    //     $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+         //$this->assertStringContainsString('Ajouter', $crawler->filter('.btn.btn-success.pull-right')->text());
+        $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
         
-    //     $this->client->submitForm('Ajouter', [
-    //     'user[username]'         => 'ghisl',
-    //     'user[password][first]'  => 'password',
-    //     'user[password][second]' => 'password',
-    //     'user[email]'            => 'ghisl@free.fr',
-    //     'user[roles]'            => ['ROLE_USER']
+        $crawler = $this->client->submitForm('Ajouter', [
+        'user[username]'         => 'ghisl',
+        'user[password][first]'  => 'password',
+        'user[password][second]' => 'password',
+        'user[email]'            => 'coco@free.fr',
+        'user[roles]'            => ['ROLE_USER']
        
-    // ]);
-    //     $urlGenerator = $this->client->getContainer()->get('router.default');
-    //     $crawler = $this->client->request(Request::METHOD_GET, $urlGenerator->generate('users_list'));
-    //    // $this->client->request(Request::METHOD_GET, $urlGenerator->generate('user_list'));
-    // //    $form = $crawler->selectButton('Ajouter')->form();
-    // //     $form['user[username]'] = 'ghis';
-    // //     $form['user[password][first]'] = 'password';
-    // //     $form['user[password][second]'] = 'password';
-    // //     $form['user[email]'] = "ghis@free.fr";
-    // //     $this->client->submit($form);
-
-    //    // $crawler = $this->client->followRedirect();
-
-    //     // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-    // //$this->assertSame("Superbe ! L'utilisateur a bien été ajouté.", $crawler->filter('div.alert.alert-success')->text());
-    //     //$crawl= $this->client->followRedirect();
-
-    //     //$this->assertSelectorTextContains('h2', 'Coucou');
-    //     //$this->assertStringContainsString('Créer un utilisateur', $crawler->filter('.btn.btn-success.pull-right')->text());
-    //     // $this->assertResponseRedirects('/users');    
-    //     //$this-> assertSelectorExists('.alert.alert-success');
-    // }
+    ]);
+   
+        $crawler = $this->client->followRedirect();
+        $this-> assertSelectorExists('.alert.alert-success');
+    }
  
     public function testUserEditLoggedInAdmin(): void
     {

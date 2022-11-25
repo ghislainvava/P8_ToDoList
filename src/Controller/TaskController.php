@@ -4,12 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManager;
+use App\services\EntityServices;
+use App\Repository\TaskRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
 
 class TaskController extends AbstractController
 {
@@ -20,21 +21,17 @@ class TaskController extends AbstractController
     }
 
     #[Route("/tasks/create", name:"task_create")]
-    public function createAction(Request $request, EntiTyManagerInterface $em)
+    public function createAction(Request $request,  EntityServices $entityservices)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
-
+        $client = $this->getUser();
         if ($form->isSubmitted() && $form->isValid()) {
-            //$em = $this->getDoctrine()->getManager();
-            $task->setUser($this->getUser());
-            $em->persist($task);
-            $em->flush();
 
+            $entityservices->eManager($task, $client);
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
-
             return $this->redirectToRoute('task_list');
         }
 
