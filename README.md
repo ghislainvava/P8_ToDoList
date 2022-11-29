@@ -13,3 +13,27 @@ lancerApplication : docker run --rm --interactive --tty --volume $PWD/conf/date.
 bin/console : docker run --rm --interactive --tty --volume $PWD/conf/date.ini:/usr/local/etc/php/conf.d/date.ini  --volume $PWD:/usr/src/myapp -w /usr/src/myapp --user $(id -u):$(id -g) php56local php bin/console doctrine:fixtures:load
 
 composer : docker run --rm --interactive --tty --volume $PWD/conf/date.ini:/usr/local/etc/php/conf.d/date.ini  --volume $PWD:/usr/src/myapp -w /usr/src/myapp --user $(id -u):$(id -g) php56local php composer.phar require symfony/http-client
+
+***
+
+A list of technologies used within the project:
+* PHP(https://www.php.net) Version 8.1.10
+* Symfony(https://symfony.com) Version 6.1
+* Composer(https://getcomposer.org) Version 2.4.2
+* Doctrine-bundle (https://symfony.com/doc/2.7/doctrine.html) Version 2.7
+* phpunit(https://phpunit.readthedocs.io/en/9.5/) Version 9.5
+
+
+
+## installation guide
+
+```shell
+$ git clone https://github.com/ghislainvava/P8_ToDoList.git
+$ composer install
+$ create an `.env.local` (from `.env`) file and write the necessary information to the database
+$ php bin/console doctrine:database:create
+$ php bin/console doctrine:migrations:migrate
+$ php bin/console doctrine:fixtures:load
+$ symfony server:start
+```
+	
