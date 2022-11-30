@@ -34,6 +34,6 @@ $ create an `.env.local` (from `.env`) file and write the necessary information 
 $ php bin/console doctrine:database:create
 $ php bin/console doctrine:migrations:migrate
 $ php bin/console doctrine:fixtures:load
-$ symfony server:start
+$ php -S 127.0.0.1:8000 -t public public/index.php
 ```
 	

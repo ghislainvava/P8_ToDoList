@@ -41,6 +41,11 @@ class TaskController extends AbstractController
     #[Route("/tasks/{id}/edit", name:"task_edit")]
     public function editAction(Task $task, Request $request, EntityManagerInterface $em)
     {
+        if ($this->getUser()->getId() != $task->getUser()->getId() || $this->isGranted('ROLE_ADMIN') == false) {
+            $this->addFlash('error', 'Vous ne pouvez pas modifier cette tache');
+
+            return $this->redirectToRoute('task_list');
+        }
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -65,21 +70,22 @@ class TaskController extends AbstractController
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)
     {
 
-       // if ($this->getUser()) {
+        if ($this->getUser()->getId() == $task->getUser()->getId() || $this->isGranted('ROLE_ADMIN')) {
            
                 $task->toggle(!$task->isDone());
                 $em->flush();
         
                 $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle())); 
-            
-            // } else {
-            //     $this->addFlash('error', "Vous ne pouvez pas marquer cet tâche, vous n'êtes pas l'auteur");  
-            // }
-            return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('task_list');   
+
+            } 
+            $this->addFlash('error', "Vous ne pouvez pas marquer cette tâche comme faîtes puisque que vous en n'êtes pas l'auteur");
+            return $this->redirectToRoute('task_list');
+          
     }
 
     #[Route("/tasks/{id}/delete", name:"task_delete")]
-    public function deleteTaskAction(Task $task, TaskRepository $repoTask, Request $request, EntityManagerInterface $em)
+    public function deleteTaskAction(Task $task,  EntityManagerInterface $em)
     {
         
         if ($this->getUser()->getId() == $task->getUser()->getId() || $this->isGranted('ROLE_ADMIN')) {
