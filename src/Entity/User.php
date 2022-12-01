@@ -35,8 +35,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message:"Vous devez saisir un nom email valide.")]
     private $email;
 
-    #[ORM\Column]
-    private array $roles = [];
+    #[ORM\Column(type: 'json')]
+    private array $roles ;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
     private Collection $author;
@@ -44,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->author = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId()
@@ -89,9 +90,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
     }
 
-   public function setRoles(array $roles): void
+   public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+        
+        return $this;
     }
 
     /**
@@ -99,12 +102,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-    
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
+    
      public function getUserIdentifier(): string
     {
         return (string) $this->email;

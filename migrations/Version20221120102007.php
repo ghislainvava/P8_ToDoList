@@ -21,6 +21,8 @@ final class Version20221120102007 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE task ADD user_id INT DEFAULT NULL');
+        $this->addSql('INSERT INTO users (username, password, email) VALUES ("anonymous", "password", "anonymous@jexistepas.fr")');
+        $this->addSql('ALTER TABLE task SET user_id = (SELECT id FROM users WHERE email = "anonymous@jexistepas.fr")');
         $this->addSql('ALTER TABLE task ADD CONSTRAINT FK_527EDB25A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('CREATE INDEX IDX_527EDB25A76ED395 ON task (user_id)');
     }
