@@ -90,6 +90,27 @@ class TaskControllerTest extends WebTestCase
         $this-> assertSelectorExists('.alert.alert-success');
         
     }
+      public function testTaskIdEditConnecte()
+    {
+
+        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
+        $user= $userRepo->find(15);
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('PUT', '/tasks/15/edit'); //verifier utilisateur existant
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->client->submitForm('Modifier', [
+            'task[title]' => 'modifier',
+            'task[content]' => 'il a était modifié'
+        ]);
+        $this->assertResponseRedirects('/tasks');
+        
+        $crawler = $this->client->followRedirect();
+        $this-> assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorTextContains('div', "To Do List app");
+
+    }
 
      public function testTaskIdEditNonConnecte()
     {
@@ -109,42 +130,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $this->client->request('PUT', '/tasks/10/toggle'); //verifier utilisateur existant
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        //$this->assertSelectorTextContains('div', "To Do List app");
-        //$this->assertStringContainsString('Se déconnecter', $crawler->filter('form .btn')->html());
-        // $taskRepository = static::getContainer()->get(TaskRepository::class);
-        // $id = $taskRepository->findOneBy(['isDone' => 0])->getId();
         
-        //$this->client->request('GET', '/task/toogle/'.$id);
-        
-        //$this->assertResponseRedirects('/');
-       // $this->client->followRedirect();
-        //$this-> assertSelectorExists('.alert.alert-success');
-        // $task->toggle(!$task->isDone());
-        // $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-    }
-
-
-
-    public function testTaskIdEditConnecte()
-    {
-
-        $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
-        $user= $userRepo->find(7);
-        $this->client->loginUser($user);
-
-        $crawler = $this->client->request('PUT', '/tasks/10/edit'); //verifier utilisateur existant
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-
-        $this->client->submitForm('Modifier', [
-            'task[title]' => 'titleedit',
-            'task[content]' => 'contentedit'
-        ]);
-        $this->assertResponseRedirects('/tasks');
-        
-        $crawler = $this->client->followRedirect();
-        $this-> assertSelectorExists('.alert.alert-success');
-        $this->assertSelectorTextContains('div', "To Do List app");
-
     }
 
       public function testDeleteIdEdit()
