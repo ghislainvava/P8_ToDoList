@@ -17,11 +17,11 @@ composer : docker run --rm --interactive --tty --volume $PWD/conf/date.ini:/usr/
 ***
 
 A list of technologies used within the project:
-* PHP(https://www.php.net) Version 8.1.10
-* Symfony(https://symfony.com) Version 6.1
-* Composer(https://getcomposer.org) Version 2.4.2
-* Doctrine-bundle (https://symfony.com/doc/2.7/doctrine.html) Version 2.7
-* phpunit(https://phpunit.readthedocs.io/en/9.5/) Version 9.5
+* PHP(https://www.php.net)Version8.1.10
+* Symfony(https://symfony.com)Version6.1
+* Composer(https://getcomposer.org)Version2.4.2
+* Doctrine-bundle (https://symfony.com/doc/2.7/doctrine.html)Version2.7
+* phpunit(https://phpunit.readthedocs.io/en/9.5/)Version9.5
 
 
 
