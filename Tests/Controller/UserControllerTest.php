@@ -68,7 +68,7 @@ class UserControllerTest extends WebTestCase
         'user[password][first]'  => 'password',
         'user[password][second]' => 'password',
         'user[email]'            => 'coco@free.fr',
-        'user[roles]'            => ['ROLE_USER']
+        'user[roles]'            => 'ROLE_USER'
        
     ]);
    
