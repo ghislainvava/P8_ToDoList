@@ -38,18 +38,12 @@ class SecurityControllerTest extends WebTestCase
         $this->client->request('GET', '/login');
        
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
-        //$this->assertResponseRedirects('http://localhost/');
+        
         static::assertResponseRedirects('/');
-         $crawler = $this->client->followRedirect();
+        $this->client->followRedirect();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', "gérer l'ensemble");
-
-        //$this->assertNotNull($user);
-        //$this->assertSame('editedTest@test.com', $editedUser->getEmail());
-        //  $client->followRedirect();
-        // $this-> assertSelectorNotExists('.alert.alert-danger');
         
-
     }
     
 

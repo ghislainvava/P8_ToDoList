@@ -85,7 +85,7 @@ class TaskControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseRedirects('/tasks');
-        $crawler = $this->client->followRedirect();
+        $this->client->followRedirect();
         $this->assertSelectorTextContains('div', "To Do List app");
         $this-> assertSelectorExists('.alert.alert-success');
         
@@ -97,7 +97,7 @@ class TaskControllerTest extends WebTestCase
         $user= $userRepo->find(15);
         $this->client->loginUser($user);
 
-        $crawler = $this->client->request('PUT', '/tasks/15/edit'); //verifier utilisateur existant
+        $this->client->request('PUT', '/tasks/15/edit'); //verifier utilisateur existant
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->client->submitForm('Modifier', [
@@ -128,7 +128,7 @@ class TaskControllerTest extends WebTestCase
         $user= $userRepo->find(15);
         $this->client->loginUser($user);
 
-        $crawler = $this->client->request('PUT', '/tasks/10/toggle'); //verifier utilisateur existant
+        $this->client->request('PUT', '/tasks/10/toggle'); //verifier utilisateur existant
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         
     }
@@ -139,7 +139,7 @@ class TaskControllerTest extends WebTestCase
         $user= $userRepo->find(7);
         $this->client->loginUser($user);
 
-        $crawler = $this->client->request('DELETE', '/tasks/3/delete'); //verifier utilisateur existant
+        $this->client->request('DELETE', '/tasks/3/delete'); //verifier utilisateur existant
 
         $this->assertSame(404, $this->client->getResponse()->getStatusCode());
         
