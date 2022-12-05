@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use Doctrine\ORM\EntityManager;
 use App\services\EntityServices;
-use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,20 +39,18 @@ class TaskController extends AbstractController
     #[Route("/tasks/{id}/edit", name:"task_edit")]
     public function editAction(Task $task, Request $request, EntityManagerInterface $em)
     {
-        if ($this->getUser()->getId() != $task->getUser()->getId() || $this->isGranted('ROLE_ADMIN') == false) {
+        if ($this->getUser()->getId() != $task->getUser()->getId() AND $this->isGranted('ROLE_ADMIN') == false) {
             $this->addFlash('error', 'Vous ne pouvez pas modifier cette tache');
 
             return $this->redirectToRoute('task_list');
         }
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setCreatedAt(new \DateTimeImmutable());
             $em->persist($task);
             $em->flush();
-
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
             return $this->redirectToRoute('task_list');
@@ -74,7 +70,6 @@ class TaskController extends AbstractController
            
                 $task->toggle(!$task->isDone());
                 $em->flush();
-        
                 $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle())); 
                 return $this->redirectToRoute('task_list');   
 
