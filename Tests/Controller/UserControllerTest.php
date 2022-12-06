@@ -3,13 +3,11 @@
 namespace Tests\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\BrowserKit\Request ;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 
 
 
@@ -60,7 +58,6 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->request(Request::METHOD_POST, '/users/create');
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-         //$this->assertStringContainsString('Ajouter', $crawler->filter('.btn.btn-success.pull-right')->text());
         $this->assertStringContainsString("Nom d'utilisateur", $crawler->filter('#user>div>label')->text());
         
         $crawler = $this->client->submitForm('Ajouter', [

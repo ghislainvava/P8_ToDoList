@@ -3,10 +3,8 @@
 namespace Tests\Controller;
 
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -43,7 +41,7 @@ class SecurityControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', "gérer l'ensemble");
-        
+
     }
     
 

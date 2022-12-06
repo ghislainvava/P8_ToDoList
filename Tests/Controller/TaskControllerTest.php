@@ -2,17 +2,12 @@
 
 namespace Tests\Controller;
 
-use App\Entity\Task;
 use App\Entity\User;
-use App\Form\TaskType;
-use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
-use App\DataFixtures\AppTestFixtures;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class TaskControllerTest extends WebTestCase
@@ -30,22 +25,17 @@ class TaskControllerTest extends WebTestCase
 
     public function testIndexListConnecte()
     {
-
-        
         $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
         $user= $userRepo->find(7);
         $this->client->loginUser($user);
-
         $this->client->request('GET', '/tasks');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-       // $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('div', "To Do List app");
     }
 
     public function testIndexListNonConnecte()
     {
-
         $this->client->request(Request::METHOD_GET, '/tasks');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertResponseRedirects('http://localhost/login');
@@ -57,9 +47,9 @@ class TaskControllerTest extends WebTestCase
     }
       public function testTaskCreateNonConnecte()
     {
-
         $this->client->request(Request::METHOD_GET, '/tasks/create');
-        $this->assertResponseRedirects('http://localhost/login'); //je teste la redicrection
+        $this->assertResponseRedirects('http://localhost/login'); 
+        //teste de la redicrection
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect(); //je redirige
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());  
@@ -72,13 +62,7 @@ class TaskControllerTest extends WebTestCase
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneById(15);
         $this->client->loginUser($testUser);
-
         $this->client->request('POST', '/tasks/create');
-        //$this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-
-        // $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('add'));
-        // $form = $crawler->selectButton(('Ajouter'));
-
         $this->client->submitForm('Ajouter', [
             'task[title]' => 'title',
             'task[content]' => 'content'
@@ -96,7 +80,6 @@ class TaskControllerTest extends WebTestCase
         $userRepo = $this->getContainer()->get("doctrine")->getRepository(User::class);
         $user= $userRepo->find(15);
         $this->client->loginUser($user);
-
         $this->client->request('PUT', '/tasks/15/edit'); //verifier utilisateur existant
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 

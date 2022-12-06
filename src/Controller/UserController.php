@@ -35,13 +35,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user=$form->getData();
-           
+
             $password = $encoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
             $em->persist($user);
             $em->flush();
-
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
             return $this->redirectToRoute('user_list');
