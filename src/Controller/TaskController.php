@@ -23,7 +23,6 @@ class TaskController extends AbstractController
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
         $client = $this->getUser();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -37,7 +36,7 @@ class TaskController extends AbstractController
     }
 
     #[Route("/tasks/{id}/edit", name:"task_edit")]
-    public function editAction(Task $task, Request $request, EntityManagerInterface $em)
+    public function editAction(Task $task, Request $request, EntityServices $entityservices)
     {
         if ($this->getUser()->getId() != $task->getUser()->getId() AND $this->isGranted('ROLE_ADMIN') == false) {
             $this->addFlash('error', 'Vous ne pouvez pas modifier cette tache');
@@ -46,11 +45,11 @@ class TaskController extends AbstractController
         }
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
+        $client = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setCreatedAt(new \DateTimeImmutable());
-            $em->persist($task);
-            $em->flush();
+            $entityservices->eManager($task, $client);
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
             return $this->redirectToRoute('task_list');
@@ -71,6 +70,7 @@ class TaskController extends AbstractController
                 $task->toggle(!$task->isDone());
                 $em->flush();
                 $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle())); 
+                
                 return $this->redirectToRoute('task_list');   
 
             } 
