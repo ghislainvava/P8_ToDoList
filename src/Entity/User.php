@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\EqualTo;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use App\Repository\UserRepository;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity("email", message: "Cet email est déjà utilisé")]
@@ -21,22 +25,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank(message:"Vous devez saisir un nom d'utilisateur.")]
+    #[NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
     private $username;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(min:8, minMessage: "Votre mot de passe doit posséder au moins 8 caractères")]
-    //#[Assert\EqualTo(propertyPath: "confirm_password", message:"Vous n'avez donné le même mot de passe ")]
+    #[Length(min: 8, minMessage: "Votre mot de passe doit posséder au moins {{ limit }} caractères")]
+    #[EqualTo(propertyPath: "confirm_password", message: "Vous n'avez donné le même mot de passe ")]
     private $password;
-   
+
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\Email()]
-    #[Assert\Length(min:2, max: 180)]
-    #[Assert\Email(message:"Vous devez saisir un nom email valide.")]
+    #[Assert\Length(min: 2, max: 180)]
+    #[Email(message: "Vous devez saisir un nom email valide.")]
     private $email;
 
     #[ORM\Column(type: 'json')]
-    private array $roles ;
+
+
+
+    private array $roles;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
     private Collection $author;
@@ -73,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password):self 
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -90,10 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
     }
 
-   public function setRoles(array $roles): self
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-        
+
         return $this;
     }
 
@@ -104,8 +110,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->roles;
     }
-    
-     public function getUserIdentifier(): string
+
+    public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }

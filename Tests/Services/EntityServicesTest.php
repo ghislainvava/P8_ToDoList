@@ -7,30 +7,50 @@ use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use App\services\EntityServices;
 use Doctrine\ORM\EntityManagerInterface;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-class EntityServicesTest extends KernelTestCase
+
+class EntityServicesTest extends TestCase
 {
-    public function testManager()
+    public function testManagerThrowsExceptionOnPersist()
     {
-        
+
         $em = $this->createMock(EntityManagerInterface::class);
-     
+
         $task = new Task();
         $user = $this->createMock(User::class);
 
         $taskService = new EntityServices($em);
-        
+
+
+        $em->expects($this->once())
+            ->method('persist')
+            ->with($task)
+            ->will($this->throwException(new \Exception));
+
+        $this->expectException(\Exception::class);
+
+        $taskService->eManager($task, $user);
+    }
+
+    public function testManagerThrowsExceptionOnFlush()
+    {
+        $em = $this->createMock(EntityManagerInterface::class);
+
+        $task = new Task();
+        $user = $this->createMock(User::class);
+
+        $taskService = new EntityServices($em);
 
         $em->expects($this->once())
             ->method('persist')
             ->with($task);
 
         $em->expects($this->once())
-            ->method('flush');
-        $taskService->eManager($task, $user); 
-        $this->assertEquals($user, $task->getUser());
+            ->method('flush')
+            ->will($this->throwException(new \Exception));
+
+        $this->expectException(\Exception::class);
+
+        $taskService->eManager($task, $user);
     }
 }

@@ -3,21 +3,22 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\TaskRepository;
-use Doctrine\DBAL\Types\Types;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
 {
+
+    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type:"datetime")]
-    private $createdAt;
+    #[ORM\Column(type:"datetime")]    private $createdAt;
 
     #[ORM\Column(type:"string")]
     #[Assert\NotBlank(message:"Vous devez saisir un titre.")]
